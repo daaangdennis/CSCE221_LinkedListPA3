@@ -45,6 +45,8 @@ class List {
 
         reference operator*() const {
             // TODO
+            /*T temp = node->data;
+            return *temp;*/
         }
         pointer operator->() const {
             // TODO
@@ -56,11 +58,15 @@ class List {
         }
         // Postfix Increment: a++
         basic_iterator operator++(int) {
-            // TODO
+            /*basic_iterator temp = *this; 
+            (*this)++; 
+            return temp;*/
         }
         // Prefix Decrement: --a
         basic_iterator& operator--() {
             // TODO
+            /*(*this)--;
+            return *this;*/
         }
         // Postfix Decrement: a--
         basic_iterator operator--(int) {
@@ -91,14 +97,24 @@ private:
     size_type _size;
 
 public:
-    List() {
-        // TODO - Don't forget the list initialier
+    List(): head(0), tail(0), _size(0){
+        head.next = &tail;
+        head.prev = &tail;
+
+        tail.next = &head;
+        tail.prev = &head;
     }
     List( size_type count, const T& value ) {
         // TODO - Don't forget the list initialier
     }
-    explicit List( size_type count ) {
+    explicit List( size_type count ): head(0), tail(0), _size(count){
         // TODO - Don't forget the list initialier
+        
+
+        /*for(size_t index = 0; index < count; index++)
+        {
+            Node newNode = new Node(T{});
+        }*/
     }
     List( const List& other ) {
         // TODO - Don't forget the list initialier
@@ -107,7 +123,16 @@ public:
         // TODO - Don't forget the list initialier
     }
     ~List() {
-        // TODO
+        Node *prevNode, *currentNode = head.next;
+        while(currentNode != &tail)
+        {
+            prevNode = currentNode;
+            currentNode = currentNode->next;
+            delete prevNode;
+        }
+        head.next = &tail;
+        tail.prev = &head;
+
     }
     List& operator=( const List& other ) {
         // TODO
@@ -137,7 +162,11 @@ public:
         // TODO
     }
     const_iterator cbegin() const noexcept {
-        // TODO
+        if(_size == 0)
+        {
+            return const_iterator(&tail);
+        }
+        return const_iterator(head.next);
     }
 
     iterator end() noexcept {
@@ -147,7 +176,7 @@ public:
         // TODO
     }
     const_iterator cend() const noexcept {
-        // TODO
+        return const_iterator(&tail);
     }
 
     bool empty() const noexcept {
@@ -155,7 +184,7 @@ public:
     }
 
     size_type size() const noexcept {
-        // TODO
+        return _size;
     }
 
     void clear() noexcept {
