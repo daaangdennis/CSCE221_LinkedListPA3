@@ -44,9 +44,7 @@ class List {
         basic_iterator& operator=(basic_iterator&&) = default;
 
         reference operator*() const {
-            // TODO
-            /*T temp = node->data;
-            return *temp;*/
+            return this->node->data;
         }
         pointer operator->() const {
             // TODO
@@ -58,15 +56,14 @@ class List {
         }
         // Postfix Increment: a++
         basic_iterator operator++(int) {
-            /*basic_iterator temp = *this; 
-            (*this)++; 
-            return temp;*/
+            Node* temp = this->node;
+            this->node = this->node->next;
+            return basic_iterator(temp);
         }
         // Prefix Decrement: --a
         basic_iterator& operator--() {
-            // TODO
-            /*(*this)--;
-            return *this;*/
+            this->node = this->node->prev;
+            return *this;
         }
         // Postfix Decrement: a--
         basic_iterator operator--(int) {
@@ -77,7 +74,7 @@ class List {
             // TODO
         }
         bool operator!=(const basic_iterator& other) const noexcept {
-            // TODO
+            return this->node != other.node;
         }
     };
 
@@ -108,13 +105,29 @@ public:
         // TODO - Don't forget the list initialier
     }
     explicit List( size_type count ): head(0), tail(0), _size(count){
-        // TODO - Don't forget the list initialier
         
+        Node *prevNode, *currentNode;
+        head.next = &tail;
+        head.prev = &tail;
 
-        /*for(size_t index = 0; index < count; index++)
+        tail.next = &head;
+        tail.prev = &head;
+
+        if(count > 0)
         {
-            Node newNode = new Node(T{});
-        }*/
+            prevNode = &head;
+
+            for(size_t num = 0; num < count; num++)
+            {
+                currentNode = new Node(T{});
+                currentNode->prev = prevNode;
+                prevNode->next = currentNode;
+                prevNode = currentNode;
+            }
+            currentNode->next = &tail;
+            tail.prev = currentNode;
+        }
+
     }
     List( const List& other ) {
         // TODO - Don't forget the list initialier
