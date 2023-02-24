@@ -36,7 +36,7 @@ class List {
         explicit basic_iterator(const Node* ptr) noexcept : node{const_cast<Node*>(ptr)} {}
 
     public:
-        basic_iterator() { /* TODO */ };
+        basic_iterator() {node = nullptr;};
         basic_iterator(const basic_iterator&) = default;
         basic_iterator(basic_iterator&&) = default;
         ~basic_iterator() = default;
@@ -47,12 +47,14 @@ class List {
             return this->node->data;
         }
         pointer operator->() const {
-            // TODO
+            T* temp = &(this->node->data);
+            return temp;
         }
 
         // Prefix Increment: ++a
         basic_iterator& operator++() {
-            // TODO
+            this->node = this->node->next;
+            return *this;
         }
         // Postfix Increment: a++
         basic_iterator operator++(int) {
@@ -67,11 +69,13 @@ class List {
         }
         // Postfix Decrement: a--
         basic_iterator operator--(int) {
-            // TODO
+            Node* temp = this->node;
+            this->node = this->node->prev;
+            return basic_iterator(temp);
         }
 
         bool operator==(const basic_iterator& other) const noexcept {
-            // TODO
+            return this->node == other.node;
         }
         bool operator!=(const basic_iterator& other) const noexcept {
             return this->node != other.node;
@@ -169,10 +173,18 @@ public:
     }
 	
     iterator begin() noexcept {
-        // TODO
+        if(_size == 0)
+        {
+            return iterator(&tail);
+        }
+        return iterator(head.next);
     }
     const_iterator begin() const noexcept {
-        // TODO
+        if(_size == 0)
+        {
+            return const_iterator(&tail);
+        }
+        return const_iterator(head.next);
     }
     const_iterator cbegin() const noexcept {
         if(_size == 0)
@@ -183,10 +195,10 @@ public:
     }
 
     iterator end() noexcept {
-        // TODO
+        return iterator(&tail);
     }
     const_iterator end() const noexcept {
-        // TODO
+        return const_iterator(&tail);
     }
     const_iterator cend() const noexcept {
         return const_iterator(&tail);
