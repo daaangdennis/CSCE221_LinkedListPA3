@@ -196,7 +196,6 @@ public:
         other.tail.next = other.tail.prev = &(other.head);
         other._size = 0;
 
-        
     }
     ~List() {
         Node *prevNode, *currentNode = head.next;
@@ -211,10 +210,56 @@ public:
 
     }
     List& operator=( const List& other ) {
-        // TODO
+        Node *prevNode, *currentNode;
+        if(this != &other)
+        {
+            this->~List();
+            this->_size = other._size;
+            
+            iterator currentSpot = iterator(other.head.next);
+            prevNode = &(this->head);
+            while(currentSpot != other.end())
+            {
+                currentNode = new Node(*currentSpot);
+                currentNode->prev = prevNode;
+                prevNode->next = currentNode;
+                prevNode = currentNode;
+                currentSpot++;
+            }
+            currentNode->next = &(this->tail);
+            this->tail.prev = currentNode;
+        }
+        return *this;
     }
     List& operator=( List&& other ) noexcept {
-        // TODO
+        if(this != &other)
+        {
+            this->~List();
+            this->_size = other._size;
+            if(_size > 0)
+            {
+                this->head.next = other.head.next;
+                this->head.prev = &(this->tail);
+                this->tail.next = &(this->head);
+                this->tail.prev = other.tail.prev;
+
+                this->head.next->prev = &(this->head);
+                this->tail.prev->next = &(this->tail);
+            }
+            else
+            {
+                this->head.next = &(this->tail);
+                this->head.prev = &(this->tail);
+                this->tail.next = &(this->head);
+                this->tail.prev = &(this->head);
+            }
+            
+            //Set old linked list to empty state
+            other.head.next = other.head.prev = &(other.tail);
+            other.tail.next = other.tail.prev = &(other.head);
+            other._size = 0;
+        }
+        return *this;
     }
 
     reference front() {
