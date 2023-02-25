@@ -325,7 +325,20 @@ public:
     }
 
     void clear() noexcept {
-        // TODO
+        Node *prevNode, *currentNode = head.next;
+        
+        //Delete linked list contents
+        while(currentNode != &tail)
+        {
+            prevNode = currentNode;
+            currentNode = currentNode->next;
+            delete prevNode;
+        }
+
+        //Set linked list to empty state
+        head.next = &tail;
+        tail.prev = &head;
+        _size = 0;
     }
 
     iterator insert( const_iterator pos, const T& value ) {
