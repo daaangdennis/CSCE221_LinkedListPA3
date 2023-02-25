@@ -263,17 +263,21 @@ public:
     }
 
     reference front() {
-        // TODO
+        reference front = head.next->data;
+        return front;
     }
     const_reference front() const {
-        // TODO
+        const_reference front = head.next->data;
+        return front;
     }
 	
     reference back() {
-        // TODO
+        reference back = tail.prev->data;
+        return back;
     }
     const_reference back() const {
-        // TODO
+        const_reference back = tail.prev->data;
+        return back;
     }
 	
     iterator begin() noexcept {
@@ -309,7 +313,11 @@ public:
     }
 
     bool empty() const noexcept {
-        // TODO
+        if(_size == 0)
+        {
+            return true;
+        }
+        return false;
     }
 
     size_type size() const noexcept {
