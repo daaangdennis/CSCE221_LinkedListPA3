@@ -342,14 +342,33 @@ public:
     }
 
     iterator insert( const_iterator pos, const T& value ) {
-        // TODO
+        
+        Node* insertedNode = new Node(value, pos.node->prev, pos.node);
+        pos.node->prev->next = insertedNode;
+        pos.node->prev = insertedNode;
+        _size++;
+
+        return iterator(insertedNode);
     }
     iterator insert( const_iterator pos, T&& value ) {
-        // TODO
+        
+        Node* insertedNode = new Node(std::move(value), pos.node->prev, pos.node);
+        pos.node->prev->next = insertedNode;
+        pos.node->prev = insertedNode;
+        _size++;
+
+        return iterator(insertedNode);
     }
 
     iterator erase( const_iterator pos ) {
-        // TODO
+       
+        iterator temp(pos.node->next);
+        pos.node->prev->next = pos.node->next;
+        pos.node->next->prev = pos.node->prev;
+        _size--;
+        delete pos.node;
+
+        return temp;
     }
 
     void push_back( const T& value ) {
