@@ -101,19 +101,37 @@ public:
     List(): head(0), tail(0), _size(0){
         head.next = &tail;
         head.prev = &tail;
-
         tail.next = &head;
         tail.prev = &head;
     }
-    List( size_type count, const T& value ) {
-        // TODO - Don't forget the list initialier
-    }
-    explicit List( size_type count ): head(0), tail(0), _size(count){
-        
+    List( size_type count, const T& value ): head(0), tail(0), _size(count) {
         Node *prevNode, *currentNode;
+
         head.next = &tail;
         head.prev = &tail;
+        tail.next = &head;
+        tail.prev = &head;
 
+        if(count > 0)
+        {
+            prevNode = &head;
+
+            for(size_t num = 0; num < count; num++)
+            {
+                currentNode = new Node(value);
+                currentNode->prev = prevNode;
+                prevNode->next = currentNode;
+                prevNode = currentNode;
+            }
+            currentNode->next = &tail;
+            tail.prev = currentNode;
+        }
+    }
+    explicit List( size_type count ): head(0), tail(0), _size(count){
+        Node *prevNode, *currentNode;
+
+        head.next = &tail;
+        head.prev = &tail;
         tail.next = &head;
         tail.prev = &head;
 
@@ -133,11 +151,52 @@ public:
         }
 
     }
-    List( const List& other ) {
-        // TODO - Don't forget the list initialier
+    List( const List& other ): head(0), tail(0), _size(other._size) {
+        Node *prevNode, *currentNode;
+
+        head.next = &tail;
+        head.prev = &tail;
+        tail.next = &head;
+        tail.prev = &head;
+
+        iterator currentSpot = iterator(other.head.next);
+        prevNode = &head;
+        while(currentSpot != other.end())
+        {
+            currentNode = new Node(*currentSpot);
+            currentNode->prev = prevNode;
+            prevNode->next = currentNode;
+            prevNode = currentNode;
+            currentSpot++;
+        }
+        currentNode->next = &tail;
+        tail.prev = currentNode;
     }
-    List( List&& other ) {
-        // TODO - Don't forget the list initialier
+    List( List&& other ): head(0), tail(0), _size(other._size) {
+        if(_size > 0)
+        {
+            head.next = other.head.next;
+            head.prev = &tail;
+            tail.next = &head;
+            tail.prev = other.tail.prev;
+
+            head.next->prev = &head;
+            tail.prev->next = &tail;
+        }
+        else
+        {
+            head.next = &tail;
+            head.prev = &tail;
+            tail.next = &head;
+            tail.prev = &head;
+        }
+        
+        //Set old linked list to empty state
+        other.head.next = other.head.prev = &(other.tail);
+        other.tail.next = other.tail.prev = &(other.head);
+        other._size = 0;
+
+        
     }
     ~List() {
         Node *prevNode, *currentNode = head.next;
