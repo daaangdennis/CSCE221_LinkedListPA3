@@ -372,25 +372,57 @@ public:
     }
 
     void push_back( const T& value ) {
-        // TODO
+
+        Node* insertedNode = new Node(value, tail.prev, &tail);
+        tail.prev->next = insertedNode;
+        tail.prev = insertedNode;
+        _size++;
+
     }
     void push_back( T&& value ) {
-        // TODO
+
+        Node* insertedNode = new Node(std::move(value), tail.prev, &tail);
+        tail.prev->next = insertedNode;
+        tail.prev = insertedNode;
+        _size++;
+
     }
 
     void pop_back() {
-        // TODO
+        
+        Node* deletedNode = tail.prev;
+        deletedNode->prev->next = &tail;
+        tail.prev = deletedNode->prev;
+        _size--;
+        delete deletedNode;
+
     }
 	
     void push_front( const T& value ) {
-        // TODO
+        
+        Node* insertedNode = new Node(value, &head, head.next);
+        head.next->prev = insertedNode;
+        head.next = insertedNode;
+        _size++;
+
     }
 	void push_front( T&& value ) {
-        // TODO
+        
+        Node* insertedNode = new Node(std::move(value), &head, head.next);
+        head.next->prev = insertedNode;
+        head.next = insertedNode;
+        _size++;
+
     }
 
     void pop_front() {
-        // TODO
+
+        Node* deletedNode = head.next;
+        deletedNode->next->prev = &head;
+        head.next = deletedNode->next;
+        _size--;
+        delete deletedNode;
+
     }
 
     /*
