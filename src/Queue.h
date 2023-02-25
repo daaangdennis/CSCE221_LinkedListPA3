@@ -37,7 +37,7 @@ class Queue {
         size_type size() const { return c.size(); }
 
         void push(const value_type& value) { c.push_back(value);}
-        void push(value_type&& value) { c.push_back(value); }
+        void push(value_type&& value) { c.push_back(std::move(value)); }
         void pop() { c.pop_front(); }
 };
 
